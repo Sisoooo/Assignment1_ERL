@@ -7,7 +7,7 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
     
-    pkg_erl1= FindPackageShare('erl1')
+    pkg_erl1= FindPackageShare('Assignment1_ERL')
     default_rviz_config_path = PathJoinSubstitution([pkg_erl1, 'rviz', 'urdf.rviz'])
 
     # Show joint state publisher GUI for joints
