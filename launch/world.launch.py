@@ -20,19 +20,19 @@ def generate_launch_description():
     # gazebo_models_path = "/home/ubuntu/gazebo_models"
     # os.environ["GZ_SIM_RESOURCE_PATH"] += os.pathsep + gazebo_models_path
 
-
     gazebo_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py'),
         ),
-        launch_arguments={'gz_args': [PathJoinSubstitution([
-            pkg_erl1,
-            'worlds',
-            LaunchConfiguration('world')
-        ]),
-        #TextSubstitution(text=' -r -v -v1 --render-engine ogre')],
-        TextSubstitution(text=' -r -v -v1')],
-        'on_exit_shutdown': 'true'}.items()
+        launch_arguments={
+            'gz_args': [
+                PathJoinSubstitution([pkg_erl1, 'worlds', LaunchConfiguration('world')]),
+                # TextSubstitution(text=' -r -v -v1 --render-engine ogre')],
+                # TextSubstitution(text=' -r -v -v1')],
+                TextSubstitution(text=' -r -v1'),
+            ],
+            'on_exit_shutdown': 'true',
+        }.items(),
     )
 
     launchDescriptionObject = LaunchDescription()
