@@ -9,8 +9,8 @@ from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
 
-    pkg_erl1= get_package_share_directory('Assignment1_ERL')
-    
+    pkg_erl1= get_package_share_directory('erl1')
+
     gazebo_models_path, ignore_last_dir = os.path.split(pkg_erl1)
     # lets Gazebo find package://erl1/... (e.g. the meshes)
     gz_path = os.environ.get("GZ_SIM_RESOURCE_PATH", "")
@@ -124,7 +124,7 @@ def generate_launch_description():
         package="ros_gz_bridge",
         executable="parameter_bridge",
         arguments=[
-            "/clock@rosgraph_msgs/msg/Cloccd k[gz.msgs.Clock",
+            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
             "/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist",
             "/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
             "/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model",
@@ -142,8 +142,27 @@ def generate_launch_description():
         output="screen",
         parameters=[
             {'use_sim_time': True},
-        ]
-    )
+        ])
+     
+    aruco_node = Node(
+        package='aruco_opencv',
+        executable='aruco_tracker_autostart',
+        output='screen',
+        parameters=[{
+            'cam_base_topic': 'camera/image',
+            'marker_dict': 'ARUCO_ORIGINAL',
+            'marker_size': 0.2,              # lato reale del marker in metri
+            'image_is_rectified': False,
+            'image_sub_compressed': False,
+            'image_sub_qos.reliability': 2,  # best effort
+            'image_sub_qos.durability': 2,   # volatile
+            'image_sub_qos.depth': 1,
+            'publish_tf': True,
+            'output_frame': '',              # pose nel frame della camera
+            'use_sim_time': True,
+        }],
+    )   
+        
 
 
 
@@ -160,5 +179,6 @@ def generate_launch_description():
     launchDescriptionObject.add_action(gz_bridge_node)
     launchDescriptionObject.add_action(gz_image_bridge_node)
     launchDescriptionObject.add_action(ekf_node)
+    launchDescriptionObject.add_action(aruco_node)
 
     return launchDescriptionObject
